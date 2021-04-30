@@ -10,9 +10,7 @@ import json
 fileFormat = []
 file = []
 fileFormat.append('txt')
-file.append('frasesTest.txt')
-fileFormat.append('json')
-file.append('test.json')
+file.append('frasesHouse.txt')
 
 #Luego, se inicializan las listas y diccionarios a generar. Son los siguientes:
 listWords = ['.', '?','!'] #Lista de palabras incluídas en el diccionario, inicializada con los signos de puntuación de fin de frase

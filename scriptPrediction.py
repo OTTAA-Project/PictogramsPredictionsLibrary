@@ -7,7 +7,7 @@ import re
 #Script donde se especifica una frase y se obtienen las predicciones
 timeStart = time.time() 
 #Datos de entrada:
-sentence = "Voy a jugar" #Frase inicial sobre la que calcular la predicción
+sentence = "Quiero una" #Frase inicial sobre la que calcular la predicción
 maxNgram = 5 #Máximo orden del N-grama
 maxNumPaths = 4 #Máximo número de caminos devueltos tras la ejecución del algoritmo
 
