@@ -30,12 +30,10 @@ for file_name in os.listdir(subt_dir):
         file.close()
     
         
-list_path = "D:/OTTAA - Lixi/PictogramsPredictionsLibrary/frasesHouse.txt"
-max_phrase_no = 30000
+list_path = "D:/OTTAA - Lixi/PictogramsPredictionsLibrary/frasesHouse"
+list_ext = ".txt"
+max_phrase_no = 2000
 
-if len(line_list) > max_phrase_no:
-    line_list = [line_list[rand] for rand in np.random.randint(0, len(line_list), size = max_phrase_no)] #reduce the list of phrases to a max_number
-        
 try:
     temp_f = open(list_path, "r")
     temp_f.close()
@@ -44,9 +42,12 @@ except Exception as e:
     print(e)
     pass
 
-w_file = open(list_path, "a", encoding="utf-8")
-for line in line_list[:-1]:
-    w_file.write(line + "\n")
-w_file.write(line_list[-1])
-    
-w_file.close() 
+
+for n in range(int(len(line_list)/max_phrase_no)):
+    list_save = list_path + str(n) + list_ext
+    w_file = open(list_save, "a", encoding="utf-8")
+    for line in line_list[n*max_phrase_no:(n+1)*max_phrase_no]:
+        w_file.write(line + "\n")
+    w_file.write(line_list[(n+1)*max_phrase_no])
+        
+    w_file.close() 
