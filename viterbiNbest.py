@@ -19,34 +19,41 @@ def viterbiNbest(sentence, maxNgram, maxNumPaths, listWords, dictNgram, listDefa
 		"""
 	listSign = [".", "?", "!", "¿", "¡", ",",";"] #Se indica la lista de signos de puntuación para no considerarlos en la evaluación de palabras
 	sentenceWords = sentence.split() #Se transforma la frase inicial en lista de palabras
-	n = min(len(sentenceWords), maxNgram-1) #Se obtiene el número de palabras iniciales sobre las que trabajar (como máximo el orden máximo del N-grama establecido menos 1 ya que hay que añadir la nueva palabra a evaluar)
 	nGram = [] #Se inicializa la lista de palabras que forman un N-grama
 	pathsSaved = dict() #Se inicializa el diccionario de caminos guardados
 	listWordsEv = list() #Lista de palabras a evaluar
-
-	for i in range(n): #Se construye el N-grama inicial sobre el que trabajar
-		nGram.append(sentenceWords[len(sentenceWords)-n+i])
 
 	probPaths = list() #Lista de las probabilidades de los caminos activos
 
 	keysDict = list(dictNgram.keys()) #Se obtienen las claves del diccionario de N-gramas en forma de lista
 	valuesDict= list(dictNgram.values()) #Se obtienen los valores del diccionario de N-gramas en forma de lista
 
-	for key, value in dictNgram.items(): #Se obtienen aquellas palabras que se encuentran en las frases del diccionario que incluyen la frase inicial
-		if sentence in key:
-			wordsSentece = key.split()
-			for w in wordsSentece:
-				if w not in listWordsEv and w not in listSign: #Se guardan aquellas palabras que aún no se encuentran en la lista, no se considerando los signos de puntuación
-					listWordsEv.append(w)
+	while len(listWordsEv) == 0 and len(sentenceWords)>0: #Se buscan palabras objetivo mientra no haya ninguna y el N-grama a evaluar no esté vacío
+		for key, value in dictNgram.items(): #Se obtienen aquellas palabras que se encuentran en las frases del diccionario que incluyen la frase inicial
+			if sentence in key:
+				wordsSentece = key.split()
+				for w in wordsSentece:
+					if w not in listWordsEv and w not in listSign: #Se guardan aquellas palabras que aún no se encuentran en la lista, no se considerando los signos de puntuación
+						listWordsEv.append(w)
+		if len(listWordsEv) == 0 and len(sentenceWords)>0: #Si la frase completa no se encuentra en el diccionario, se va acortando el N-grama eliminando las palabras iniciales
+			sentenceWords.remove(sentenceWords[0])
+			sentence = ' '.join(sentenceWords)
+
+	n = min(len(sentenceWords), maxNgram-1) #Se obtiene el número de palabras iniciales sobre las que trabajar (como máximo el orden máximo del N-grama establecido menos 1 ya que hay que añadir la nueva palabra a evaluar)
 
 	try:
-		listWordsEv.remove(sentenceWords[len(sentenceWords)-1]) #Se elimina la última palabra de la frase inicial para no repetirla en la predicción
+		for i in range(n):
+			listWordsEv.remove(sentenceWords[len(sentenceWords)-(i+1)]) #Se elimina las palabras de la frase inicial para no repetirlas en la predicción
 	except:
 		listWordsEv
-					
+
+	for i in range(n): #Se construye el N-grama inicial sobre el que trabajar
+		nGram.append(sentenceWords[len(sentenceWords)-n+i])
+
 	for word in listWordsEv: #Se recorre la lista de palabras para calcular su probabilidad y se añade a la lista de probabilidades
 		prob = evaluateNgram(word, nGram, keysDict, valuesDict)
 		pathsSaved[word] = prob
+		#print(word,prob)
 
 	pathsSavedOrdered = dict(sorted(pathsSaved.items(), key=lambda item: item[1], reverse = True)) #Se ordenan las palabras evaluadas en orden decreciente de probabilidad
 	pathsSO = list(pathsSavedOrdered.keys()) #Se obtiene la lista de caminos guardados ordenada por probabilidad
@@ -132,12 +139,17 @@ def conjugateSentence(sentence, path, maxNgram, dictNgram, verbs_array):#Funció
 			while len(nGram) > maxNgram: #Si es mayor que la longitud máxima, se van eliminando las palabras iniciales hasta ajustar su longitud
 				nGram.pop(0)
 
-			probList = []
-			for verb in conj: #Posteriormente, se evalúa cada forma verbal tras el N-grama anterior
-				prob = evaluateNgram(verb, nGram, keysDict, valuesDict)
-				probList.append(prob)
-
-			maxProb = max(probList) #Se calcula la máxima probabilidad de entre todas las formas verbales evaluadas
+			maxProb = -10000
+			nIni = 0
+			while maxProb == -10000 and nIni <= len(nGram):#Se evaluan las conjugaciones objetivo mientras no se haya encontrado ninguna palabra y el N-grama a evaluar no esté vacío
+				probList = []
+				for verb in conj: #Posteriormente, se evalúa cada forma verbal tras el N-grama anterior
+					prob = evaluateNgram(verb, nGram[nIni:len(nGram)], keysDict, valuesDict)
+					probList.append(prob)
+				maxProb = max(probList) #Se calcula la máxima probabilidad de entre todas las formas verbales evaluadas
+				if maxProb == -10000 :#Si el N-grama completo no encuentra conjugaciones, se va acortando el N-grama eliminando las palabras iniciales
+					nIni = nIni + 1
+	
 			indexMax = probList.index(maxProb) #Y se obtiene el índice donde ha acontecido esta máxima probabilidad 
 
 			wordConj = conj[indexMax] #Finalmente, se recoge esta forma verbal
