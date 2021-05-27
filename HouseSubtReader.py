@@ -10,7 +10,7 @@ Created on Thu Apr 29 14:41:41 2021
 import os
 import numpy as np
 
-subt_dir = "D:/OTTAA - Lixi/PictogramsPredictionsLibrary/HouseSubt"
+subt_dir = "D:/OTTAA - Lixi/PictogramsPredictionsLibrary/CSIMSubt"
 line_list = []
 
 for file_name in os.listdir(subt_dir):
@@ -19,7 +19,7 @@ for file_name in os.listdir(subt_dir):
         
         for line in file:
             line_array = line.split(" ") #get each word of the phrase on a list
-            if ("-->" in line_array) or (line_array[0] == "\n") or ("argenteam" in line) or ("aRGENTeaM" in line) or ("tvsubtitles" in line): #filter lines that has this elements
+            if ("-->" in line_array) or (line_array[0] == "\n") or ("Temporada" in line) or ("trotamon" in line) or ("tvsubtitles" in line) or (" \n" == line): #filter lines that has this elements
                 pass
             else:
                 try:
@@ -30,7 +30,7 @@ for file_name in os.listdir(subt_dir):
         file.close()
     
         
-list_path = "D:/OTTAA - Lixi/PictogramsPredictionsLibrary/frasesHouse"
+list_path = "D:/OTTAA - Lixi/PictogramsPredictionsLibrary/frasesCSIM"
 list_ext = ".txt"
 max_phrase_no = 2000
 
