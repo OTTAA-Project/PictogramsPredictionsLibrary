@@ -1,4 +1,4 @@
-from calcularPrediccion import calcularPrediccion
+from calcularPrediccionBackoff import calcularPrediccion
 import json
 import time
 import os
@@ -7,7 +7,7 @@ import re
 #Script donde se especifica una frase y se obtienen las predicciones
 timeStart = time.time() 
 #Datos de entrada:
-sentence = "Juan Manuel" #Frase inicial sobre la que calcular la predicción
+sentence = "Los átomos" #Frase inicial sobre la que calcular la predicción
 maxNgram = 5 #Máximo orden del N-grama
 maxNumPaths = 4 #Máximo número de caminos devueltos tras la ejecución del algoritmo
 

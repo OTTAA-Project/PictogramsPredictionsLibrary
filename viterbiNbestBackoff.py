@@ -50,7 +50,7 @@ def viterbiNbest(sentence, maxNgram, maxNumPaths, listWords, dictNgram, dictBack
 	n = min(len(sentenceWords), maxNgram-1) #Se obtiene el número de palabras iniciales sobre las que trabajar (como máximo el orden máximo del N-grama establecido menos 1 ya que hay que añadir la nueva palabra a evaluar)
 	nBack = nIni - n #Diferencia entre el número de palabras de la frase inicial y el de la frase con la que trabajar; utilizado para el cálculo del backoff
 	probBack = 1 #Se inicializa la probabilidad de backoff a 1; no influye en aquellos casos no necesarios
-	if nBack > 0:
+	if nBack > 0  and len(sentenceWords) > 0:
 		nGramBack.append(sentenceWords[0]) #Se añade la primera palabra de la parte final de la frase (evaluación diccionario) para incluirla en backoff
 		try: #Se evaluan los bigrama de inicio de frase para recoger su parámetro de backoff
 			for b in range(nBack): 
