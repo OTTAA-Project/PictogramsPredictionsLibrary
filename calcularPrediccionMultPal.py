@@ -1,7 +1,7 @@
 from generateGeneralLanguajeModel import replaceToInfinitive
-from viterbiNbest import viterbiNbest
-from viterbiNbest import conjugateSentence
-from viterbiNbest import convertToJSON
+from viterbiNbestMultPal import viterbiNbest
+from viterbiNbestMultPal import conjugateSentence
+from viterbiNbestMultPal import convertToJSON
 import json
 import time
 
